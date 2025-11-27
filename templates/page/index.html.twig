@@ -4,11 +4,44 @@
 
 {% block body %}
 
-
 <div class="container px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-        <div class="col-md-10 col-lg-8 col-xl-7">
-        </div>
+    <h1 class="text-center">Blog de Jordi</h1>
+    <p class="text-center">Un blog sobre mi vida</p>
+
+    {# Tabla con las categorías como pestañas #}
+    <div class="table-responsive">
+      <table class="table text-center">
+        <thead>
+          <tr>
+            {% for category in categories %}
+              <td>
+                <a class="link {{ loop.first ? 'active' : '' }}" 
+                   href="#category{{ category.id }}" data-toggle="tab">
+                   {{ category.name }}
+                </a>
+              </td>
+            {% endfor %}
+          </tr>
+        </thead>
+      </table>
+      <hr>
     </div>
+
+    {# Contenido de cada pestaña: las imágenes #}
+    <div class="tab-content">
+      {% for category in categories %}
+        <div id="category{{ category.id }}" class="tab-pane {{ loop.first ? 'active' : '' }}">
+          <div class="row popup-gallery">
+            {% for image in category.images %}
+              {{ include('partials/_image.html.twig') }}
+            {% else %}
+              <p>No hay imágenes en esta categoría.</p>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
 </div>
+
 {% endblock %}

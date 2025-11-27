@@ -24,11 +24,15 @@ security:
             logout:
                 path: app_logout
                 target: index
-            # Habilitar sesiones y recordar usuarios
+            
             remember_me:
                 secret: '%kernel.secret%'
 
     access_control:
-        # Solo los usuarios logueados pueden acceder al blog
-        - { path: ^/blog, roles: ROLE_USER }
-        - { path: ^/single_post, roles: ROLE_USER }
+    # 👉 Primero el área ADMIN
+    - { path: ^/admin, roles: ROLE_ADMIN }
+
+    # Luego el blog
+    - { path: ^/blog, roles: ROLE_USER }
+    - { path: ^/single_post, roles: ROLE_USER }
+

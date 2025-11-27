@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestión de Imágenes{% endblock %}
+
+{% block body %}
+<div id="images">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2">
+            <h1>Gestión de Imágenes</h1>
+
+            {# Renderizamos el formulario #}
+            {{ form_start(form, {'attr': {'class':'form-horizontal'}}) }}
+
+                <div class="form-group">
+                    {{ form_label(form.file) }}
+                    {{ form_widget(form.file) }}
+                    {{ form_errors(form.file) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.numLikes) }}
+                    {{ form_widget(form.numLikes) }}
+                    {{ form_errors(form.numLikes) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.numViews) }}
+                    {{ form_widget(form.numViews) }}
+                    {{ form_errors(form.numViews) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.numDownloads) }}
+                    {{ form_widget(form.numDownloads) }}
+                    {{ form_errors(form.numDownloads) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.category) }}
+                    {{ form_widget(form.category) }}
+                    {{ form_errors(form.category) }}
+                </div>
+
+                <div class="form-group mt-3">
+                    {{ form_widget(form.Send) }}
+                </div>
+
+            {{ form_end(form) }}
+
+            <hr class="divider">
+
+        </div>   
+    </div>
+</div>
+<hr class="divider">
+
+<h2>Listado de Imágenes</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Imagen</th>
+            <th>Likes</th>
+            <th>Views</th>
+            <th>Downloads</th>
+            <th>Categoría</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for image in images %}
+        <tr>
+            <td>{{ image.id }}</td>
+
+            {# MOSTRAR LA IMAGEN #}
+            <td>
+                <img src="{{ asset('images/index/gallery/' ~ image.file) }}"
+                     style="width:120px; border-radius:6px;">
+            </td>
+
+            <td>{{ image.numLikes }}</td>
+            <td>{{ image.numViews }}</td>
+            <td>{{ image.numDownloads }}</td>
+            <td>{{ image.category ? image.category.name : 'Sin categoría' }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

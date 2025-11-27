@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestión de Categorías{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>Gestión de Categorías</h1>
+
+    {# Mostrar formulario #}
+    {{ form_start(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.save) }}
+    {{ form_end(form) }}
+
+    <hr class="divider">
+
+    {# Listado de categorías #}
+    <h2 class="mt-4">Listado de Categorías</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+            </tr>
+        </thead>
+      <tbody>
+    {% for category in categories %}
+        <tr>
+            <th scope="row">{{ category.id }}</th>
+            <td>{{ category.name }}</td>
+            <td>
+                <form method="post" action="{{ path('app_delete_category', {'id': category.id}) }}" onsubmit="return confirm('¿Seguro que quieres eliminar esta categoría?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+                    <button class="btn btn-danger btn-sm">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="3">No hay categorías.</td>
+        </tr>
+    {% endfor %}
+   </tbody>
+
+    </table>
+</div>
+{% endblock %}
