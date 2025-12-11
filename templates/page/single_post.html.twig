@@ -9,7 +9,8 @@
             <div class="col-md-10 col-lg-8 col-xl-7">
                 <div class="site-heading">
                     <h1>{{ post.title }}</h1>
-                    {% if post.subtitle %}
+                    {# Si quieres subtitulo, asegúrate de tener el campo en Post #}
+                    {% if post.subtitle is defined and post.subtitle %}
                         <span class="subheading">{{ post.subtitle }}</span>
                     {% endif %}
                 </div>
@@ -21,10 +22,24 @@
 <div class="container px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
+
             <p class="post-meta">
-                Posted by <a href="#">{{ post.author }}</a> on {{ post.date }}
+                Subido por
+                <a href="#">
+                    {{ post.postUser ? post.postUser.userIdentifier : 'Anónimo' }}
+                </a>
+                el {{ post.publishedAt ? post.publishedAt|date('d M, Y') : '' }}
             </p>
-            <p>Contenido de ejemplo del post...</p>
+
+            {# Mostrar imagen si existe #}
+            {% if post.image %}
+                <img src="{{ asset('uploads/posts/' ~ post.image) }}" alt="Imagen del post" class="img-fluid mb-4" />
+            {% endif %}
+
+            {# Contenido del post #}
+            <div class="post-content">
+                {{ post.content|raw }}
+            </div>
         </div>
     </div>
 </div>

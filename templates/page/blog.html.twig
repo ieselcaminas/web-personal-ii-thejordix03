@@ -9,7 +9,11 @@
             <div class="col-md-10 col-lg-8 col-xl-7">
                 <div class="site-heading">
                     <h1>Blog</h1>
-                    <span class="subheading">Mis ultimos post</span>
+                    <span class="subheading">Mis últimos posts</span>
+                    {# Botón para crear nuevo post #}
+                    <a href="{{ path('new_post') }}" class="btn btn-primary mt-3">
+                        Crear nuevo post
+                    </a>
                 </div>
             </div>
         </div>
@@ -21,14 +25,15 @@
         <div class="col-md-10 col-lg-8 col-xl-7">
             {% for id, post in posts %}
                 <div class="post-preview">
-                    <a href="{{ path('single_post', {'id': id}) }}">
+                    <a href="{{ path('single_post', {'slug': post.slug}) }}">
                         <h2 class="post-title">{{ post.title }}</h2>
-                        {% if post.subtitle %}
+                        {% if post.subtitle is defined and post.subtitle %}
                             <h3 class="post-subtitle">{{ post.subtitle }}</h3>
                         {% endif %}
                     </a>
                     <p class="post-meta">
-                        Subido por <a href="#">{{ post.author }}</a> on {{ post.date }}
+                        Subido por <a href="#">{{ post.postUser ? post.postUser.userIdentifier : 'Anónimo' }}</a>
+                        on {{ post.publishedAt ? post.publishedAt|date('d M, Y') : '' }}
                     </p>
                 </div>
                 <hr class="my-4" />
