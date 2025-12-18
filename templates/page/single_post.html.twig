@@ -9,7 +9,6 @@
             <div class="col-md-10 col-lg-8 col-xl-7">
                 <div class="site-heading">
                     <h1>{{ post.title }}</h1>
-                    {# Si quieres subtitulo, asegúrate de tener el campo en Post #}
                     {% if post.subtitle is defined and post.subtitle %}
                         <span class="subheading">{{ post.subtitle }}</span>
                     {% endif %}
@@ -22,7 +21,6 @@
 <div class="container px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
-
             <p class="post-meta">
                 Subido por
                 <a href="#">
@@ -31,16 +29,52 @@
                 el {{ post.publishedAt ? post.publishedAt|date('d M, Y') : '' }}
             </p>
 
-            {# Mostrar imagen si existe #}
             {% if post.image %}
                 <img src="{{ asset('uploads/posts/' ~ post.image) }}" alt="Imagen del post" class="img-fluid mb-4" />
             {% endif %}
 
-            {# Contenido del post #}
             <div class="post-content">
                 {{ post.content|raw }}
             </div>
+
+            <hr>
+
+            {# Formulario de comentarios #}
+            <h4 class="mt-4">Deja un comentario</h4>
+            {{ form_start(commentForm) }}
+                {{ form_row(commentForm.name) }}
+                {{ form_row(commentForm.email) }}
+                {{ form_row(commentForm.text) }}
+                <button class="btn btn-primary">Enviar comentario</button>
+            {{ form_end(commentForm) }}
+
+            {# Mostrar comentarios #}
+            <h3 class="mt-5">Comentarios</h3>
+            {% for comment in comments %}
+                <div class="comment">
+                    <p><strong>{{ comment.name }}</strong> - {{ comment.publishedAt|date('d M, Y H:i') }}</p>
+                    <p>{{ comment.text }}</p>
+                </div>
+            {% else %}
+                <p class="text-muted">No hay comentarios aún.</p>
+            {% endfor %}
         </div>
     </div>
 </div>
+<ul class="list-inline mt-4">
+    <li class="list-inline-item">
+        <a href="{{ path('post_like', { slug: post.slug }) }}">
+            LIKE <i class="fa fa-heart sr-icons"></i>
+        </a>
+        {{ post.numLikes }}
+    </li>
+
+    <li class="list-inline-item">
+        <a class="page-scroll" href="#form">
+            COMMENT <i class="fa fa-comments sr-icons"></i>
+        </a>
+        {{ post.numComments }}
+    </li>
+</ul>
+
 {% endblock %}

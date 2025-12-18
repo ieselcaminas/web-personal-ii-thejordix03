@@ -1,40 +1,53 @@
 <?php
-
 namespace App\Controller;
 
+use App\Entity\Contact;
+use App\Form\ContactType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Form\ContactType;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
 class ContactController extends AbstractController
 {
-   #[Route('/contact', name: 'contact')]
-   public function contact(Request $request, MailerInterface $mailer): Response
-   {
-       $form = $this->createForm(ContactType::class);
-       $form->handleRequest($request);
+    #[Route('/contact', name: 'contact')]
+    public function contact(
+        Request $request,
+        MailerInterface $mailer,
+        EntityManagerInterface $em
+    ): Response {
+        // 👉 Crear entidad
+        $contact = new Contact();
 
-       if ($form->isSubmitted() && $form->isValid()) {
-           $data = $form->getData();
+        // 👉 Formulario ligado a la entidad
+        $form = $this->createForm(ContactType::class, $contact);
+        $form->handleRequest($request);
 
-           $email = (new Email())
-               ->from($data['email'])
-               ->to('tucorreo@dominio.com')
-               ->subject($data['subject'])
-               ->text($data['message']);
+        if ($form->isSubmitted() && $form->isValid()) {
 
-           $mailer->send($email);
+            // ✅ GUARDAR EN BASE DE DATOS
+            $em->persist($contact);
+            $em->flush();
 
-           $this->addFlash('success', 'Mensaje enviado correctamente.');
-           return $this->redirectToRoute('contact');
-       }
+            // 📧 Enviar email (opcional)
+            $email = (new Email())
+                ->from($contact->getEmail())
+                ->to('tucorreo@dominio.com')
+                ->subject($contact->getSubject())
+                ->text($contact->getMessage());
 
-       return $this->render('page/contact.html.twig', [
-           'contactForm' => $form->createView(),
-       ]);
-   }
+            $mailer->send($email);
+
+            $this->addFlash('success', 'Mensaje enviado correctamente.');
+
+            return $this->redirectToRoute('contact');
+        }
+
+        return $this->render('page/contact.html.twig', [
+            'contactForm' => $form->createView(),
+        ]);
+    }
 }

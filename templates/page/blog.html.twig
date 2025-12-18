@@ -23,6 +23,7 @@
 <div class="container px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
+            {# Mostrar los posts existentes #}
             {% for id, post in posts %}
                 <div class="post-preview">
                     <a href="{{ path('single_post', {'slug': post.slug}) }}">
@@ -37,6 +38,13 @@
                     </p>
                 </div>
                 <hr class="my-4" />
+            {% endfor %}
+
+            {# Mostrar los 5 posts recientes #}
+            <h3 class="mt-5">Posts Recientes</h3>
+            {% for recent in recents %}
+                {# Incluir el partial para cada post reciente #}
+                {{ include('partials/_recent_post.html.twig', {'recent': recent}) }}
             {% endfor %}
         </div>
     </div>
